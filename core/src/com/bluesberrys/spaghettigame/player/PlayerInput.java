@@ -1,4 +1,4 @@
-package com.bluesberrys.spaghettigame;
+package com.bluesberrys.spaghettigame.player;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;

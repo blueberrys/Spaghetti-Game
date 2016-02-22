@@ -3,10 +3,10 @@ package com.bluesberrys.spaghettigame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.bluesberrys.spaghettigame.player.PlayerInput;
+import com.bluesberrys.spaghettigame.world.World;
 
 public class PlayScreen extends ScreenAdapter {
 
@@ -15,11 +15,10 @@ public class PlayScreen extends ScreenAdapter {
 	private PlayerInput input;
 	private float moveSpeed;
 
+	private World world;
+
 	private ShapeRenderer sr;
-
-	private SpriteBatch batch;
-	private Texture img;
-
+	
 	public PlayScreen(OrthographicCamera cam) {
 		this.cam = cam;
 	}
@@ -28,12 +27,11 @@ public class PlayScreen extends ScreenAdapter {
 	public void show() {
 		input = new PlayerInput(cam);
 		Gdx.input.setInputProcessor(input);
-		moveSpeed = 2;
+		moveSpeed = 4;
+
+		world = new World(20, 10);
 
 		sr = new ShapeRenderer();
-
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
 	}
 
 	@Override
@@ -41,15 +39,9 @@ public class PlayScreen extends ScreenAdapter {
 		sr.setProjectionMatrix(cam.combined);
 
 		sr.begin(ShapeType.Filled);
-		sr.setColor(0, 0, 0, 1);
-		sr.rect(20, 20, 20, 20);
-		sr.circle(20, 40, 20);
+		sr.setColor(255, 255, 255, 1);
+		world.render(sr);
 		sr.end();
-
-		batch.setProjectionMatrix(cam.combined);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
 	}
 
 	public void tick(float tickTime) {
