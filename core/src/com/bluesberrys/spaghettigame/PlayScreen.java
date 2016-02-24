@@ -1,16 +1,20 @@
 package com.bluesberrys.spaghettigame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector2;
 import com.bluesberrys.blugameengine_v3.base.TickableScreen;
 import com.bluesberrys.blugameengine_v3.events.input.InputEventsManager;
 import com.bluesberrys.spaghettigame.world.World;
 
 public class PlayScreen implements TickableScreen {
-	
+
 	private OrthographicCamera cam;
+	private Vector2 camMove;
+	private float camMoveSpeed;
 
 	private ShapeRenderer sr;
 	private InputEventsManager input;
@@ -19,18 +23,46 @@ public class PlayScreen implements TickableScreen {
 
 	public PlayScreen(OrthographicCamera cam) {
 		this.cam = cam;
+		this.camMove = new Vector2();
+		this.camMoveSpeed = 10f;
 
 		this.sr = new ShapeRenderer();
 		this.input = new InputEventsManager();
+		input.getKeyDownEvent().addTask(data -> {
+			switch (data) {
+				case Input.Keys.W:
+					camMove.y += camMoveSpeed;
+					break;
+				case Input.Keys.S:
+					camMove.y -= camMoveSpeed;
+					break;
+				case Input.Keys.D:
+					camMove.x += camMoveSpeed;
+					break;
+				case Input.Keys.A:
+					camMove.x -= camMoveSpeed;
+					break;
+			}
+		});
+		input.getKeyUpEvent().addTask(data -> {
+			switch (data) {
+				case Input.Keys.W:
+					camMove.y -= camMoveSpeed;
+					break;
+				case Input.Keys.S:
+					camMove.y += camMoveSpeed;
+					break;
+				case Input.Keys.D:
+					camMove.x -= camMoveSpeed;
+					break;
+				case Input.Keys.A:
+					camMove.x += camMoveSpeed;
+					break;
+			}
+		});
 		input.getScrolledEvent().addTask(data -> {
 			cam.zoom += data * 0.1;
 			cam.update();
-		});
-		input.getTouchDownEvent().addTask(data -> {
-
-		});
-		input.getTouchDraggedEvent().addTask(data -> {
-
 		});
 
 		this.world = new World();
@@ -51,6 +83,11 @@ public class PlayScreen implements TickableScreen {
 
 	@Override
 	public void tick(float tickTime) {
+		if (camMove.x != 0 || camMove.y != 0) {
+			cam.position.x += camMove.x;
+			cam.position.y += camMove.y;
+			cam.update();
+		}
 	}
 
 	@Override
