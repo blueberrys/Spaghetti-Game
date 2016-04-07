@@ -24,10 +24,16 @@ public class PlayScreen implements TickableScreen {
 	public PlayScreen(OrthographicCamera cam) {
 		this.cam = cam;
 		this.camMove = new Vector2();
-		this.camMoveSpeed = 10f;
+		this.camMoveSpeed = 1f;
 
 		this.sr = new ShapeRenderer();
 		this.input = new InputEventsManager();
+		initInput();
+
+		this.world = new World();
+	}
+
+	private void initInput() {
 		input.getKeyDownEvent().addTask(data -> {
 			switch (data) {
 				case Input.Keys.W:
@@ -61,16 +67,20 @@ public class PlayScreen implements TickableScreen {
 			}
 		});
 		input.getScrolledEvent().addTask(data -> {
-			cam.zoom += data * 0.1;
+			cam.zoom += data * 0.01;
+			if (cam.zoom <= 0) {
+				cam.zoom -= data * 0.01;
+			}
 			cam.update();
 		});
-
-		this.world = new World();
 	}
 
 	@Override
 	public void show() {
 		Gdx.input.setInputProcessor(input);
+
+		cam.zoom = 0.1f;
+		cam.update();
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 
 public class Block {
-	public static final float SIZE = 20;
+	public static final float SIZE = 1;
 
 	private Color color;
 
